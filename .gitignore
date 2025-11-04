@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# Playwright
+playwright-report/
+playwright/.cache/
