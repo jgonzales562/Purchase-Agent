@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Add to Cart",
+  "version": "2.0.0",
+  "description": "Quickly add products to your cart with one click",
+  "permissions": ["storage", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.gamestop.com/*/products/*",
+        "https://www.pokemoncenter.com/product/*",
+        "https://www.bestbuy.com/site/*",
+        "https://www.target.com/p/*",
+        "https://www.walmart.com/ip/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

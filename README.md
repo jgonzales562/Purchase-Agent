@@ -1,100 +1,71 @@
-# Purchase-Agent
+# Quick Add to Cart - Browser Extension
 
-An extensible browser automation agent that can make purchases on your behalf, starting with a safe demo flow (no real payments) against a public test store.
+## What It Is
 
-## What it does
+A simple Chrome browser extension that quickly adds products to your cart with one click. Set your desired quantity and add items instantly without manual clicking.
 
-- Pluggable site "drivers" with a common purchase contract
-- Playwright-powered browser automation (Chromium)
-- Human-in-the-loop confirmation before checkout
-- Demo driver for Saucedemo (login, add to cart, checkout)
-- Watch-and-purchase: automatically buys when an item becomes available (with optional price cap)
-  - Uses interval jitter to reduce bot-like patterns
-  - Supports persistent sessions (Playwright storage) per site to cut login latency
+## Features
 
-## Security & ethics
+- 🛒 **One-click add to cart** - Quick purchase with custom quantities
+- 🎯 **Multi-site support** - Works on GameStop, Best Buy, Target, Walmart, Pokémon Center
+- � **Quantity control** - Choose quantity 1-10 before adding
+- 💾 **Remembers preferences** - Saves your quantity per product
+- ⚡ **Fast & simple** - No unnecessary features, just quick adding
 
-- No real payment credentials are stored or transmitted by default.
-- For real sites, prefer official APIs; respect site ToS and anti-bot policies.
-- Keep a human confirmation step for all monetary actions.
+## Installation
 
-## Setup
+### For Chrome/Edge:
 
-1. Create a virtual environment and install dependencies
+1. Open Chrome and go to `chrome://extensions/`
+2. Enable "Developer mode" (top-right toggle)
+3. Click "Load unpacked"
+4. Select the `Purchase-Agent` folder
+5. The extension icon will appear in your toolbar
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python -m playwright install
-```
+## Usage
 
-2. Run a demo purchase on Saucedemo in headed mode
+1. **Visit any product page** on a supported site
+2. **Click the extension icon** in your toolbar
+3. **Set your quantity** (1-10)
+4. **Click "🛒 Add to Cart"** button
+5. Done! The product is added to your cart
 
-```bash
-python -m purchase_agent.cli purchase --site saucedemo --product "Sauce Labs Backpack" --headed --confirm
-```
+## How It Works
 
-Notes:
+The extension detects when you're on a supported product page and enables a simple interface to:
 
-- Saucedemo uses test creds `standard_user` / `secret_sauce` and simulates checkout; no real payment.
-- If you omit `--confirm`, the agent will stop before placing the order and prompt you.
+- Select the quantity you want
+- Automatically click the site's add-to-cart button with the right quantity
+- Save your quantity preference for next time
 
-### Watch and auto-purchase when available
+No bots, no automation - just your browser doing the clicking for you!
 
-Automatically watch a product and purchase as soon as it’s in stock and within a price cap.
+## Supported Sites
 
-```bash
-python -m purchase_agent.cli watch-purchase \
-  --site saucedemo \
-  --product "Sauce Labs Backpack" \
-  --interval 10 \
-  --jitter 0.2 \
-  --timeout 600 \
-  --price-max 35 \
-  --webhook https://hooks.slack.com/services/XXX/YYY/ZZZ \
-  --confirm
-```
+- GameStop (gamestop.com)
+- Best Buy (bestbuy.com)
+- Target (target.com)
+- Walmart (walmart.com)
+- Pokémon Center (pokemoncenter.com)
 
-Flags:
+## Files
 
-- `--interval`: polling frequency in seconds (default 15)
-- `--jitter`: randomize interval by ±X% (default 0.2 = ±20%)
-- `--webhook`: Slack-compatible webhook URL (or set env var `PURCHASE_AGENT_WEBHOOK`)
-- `--timeout`: stop after N seconds (omit or 0 for no timeout)
-- `--price-max`: only purchase if price is at or below this value
-- `--headed`: show the browser window
-- `--confirm`: auto-confirm checkout when available
+- `manifest.json` - Extension configuration
+- `popup.html` - Extension popup interface
+- `popup.js` - Popup UI logic
+- `content.js` - Site-specific add-to-cart logic
+- `background.js` - Storage handler for preferences
 
-### Persistent login (optional)
+## Privacy
 
-The agent will persist a site session in `storage/<site>.json` and load it on future runs. This can reduce
-login time and improve first-action latency. You can delete the file to reset the session.
+This extension:
 
-### Webhook notifications (optional)
+- ✅ Only runs on product pages of supported sites
+- ✅ Stores quantity preferences locally on your device
+- ✅ Does not collect or transmit any data
+- ✅ Does not track your browsing
+- ✅ Open source - inspect the code yourself!
 
-If a webhook is set (via `--webhook` or `PURCHASE_AGENT_WEBHOOK`), the watcher will send:
+## License
 
-- An "in stock" notification before attempting purchase (with price if available)
-- A result notification after purchase (success/failure, includes order id when present)
-
-## Project layout
-
-```
-purchase_agent/
-  cli.py                # Typer CLI entrypoint
-  agent.py              # Base agent and driver registry
-  watcher.py            # Availability watcher and auto-purchase
-  utils/
-    browser.py          # Playwright helpers
-  sites/
-    base.py             # Site driver interface and availability contract
-    saucedemo.py        # Demo site implementation
-```
-
-## Next steps
-
-- Add profile storage per site (addresses, preferences) via encrypted keyring
-- Add more site drivers or API integrations where available
-- Introduce a rules engine for selection/pricing thresholds
-- Add tests (pytest) and CI
+Free to use and modify.

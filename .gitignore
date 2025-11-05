@@ -1,17 +1,10 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-.venv/
-venv/
-.env
-.env.*
-
 # VS Code
 .vscode/
 
-# Playwright
-playwright-report/
-playwright/.cache/
+# Backup files
+*.backup
+*.backup2
+
+# OS files
+.DS_Store
+Thumbs.db
